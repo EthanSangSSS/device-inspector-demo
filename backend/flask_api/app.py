@@ -51,6 +51,68 @@ def create_app(
             return jsonify({"error": str(exc)}), 400
         return jsonify({"device": device}), 201
 
+    @app.post("/cases")
+    @require_auth
+    def create_case() -> Any:
+        payload = request.get_json(force=True)
+        try:
+            case = repo.save_case(payload, actor="demo.engineer")
+        except ValueError as exc:
+            return jsonify({"error": str(exc)}), 400
+        return jsonify({"case": case}), 201
+
+    @app.get("/cases/<case_id>")
+    @require_auth
+    def get_case(case_id: str) -> Any:
+        case = repo.get_case(case_id)
+        if not case:
+            return jsonify({"error": "unknown case_id"}), 404
+        evidence = repo.list_case_logs(case_id)
+        return jsonify({"case": case, "evidence": evidence})
+
+    @app.post("/cases/<case_id>/status")
+    @require_auth
+    def update_case_status(case_id: str) -> Any:
+        payload = request.get_json(force=True)
+        try:
+            case = repo.update_case_status(case_id, payload.get("status"), actor="demo.engineer")
+        except ValueError as exc:
+            return jsonify({"error": str(exc)}), 400
+        return jsonify({"case": case})
+
+    @app.post("/cases/<case_id>/evidence")
+    @require_auth
+    def create_case_evidence(case_id: str) -> Any:
+        payload = request.get_json(force=True)
+        payload["case_id"] = case_id
+        try:
+            evidence = repo.save_log(payload, actor="demo.engineer")
+            repo.update_case_status(case_id, "evidence_collected", actor="system")
+        except ValueError as exc:
+            return jsonify({"error": str(exc)}), 400
+        return jsonify({"evidence": evidence}), 201
+
+    @app.post("/cases/<case_id>/triage")
+    @require_auth
+    def triage_case(case_id: str) -> Any:
+        case = repo.get_case(case_id)
+        if not case:
+            return jsonify({"error": "unknown case_id"}), 404
+        device = repo.get_device(case["device_id"])
+        if not device:
+            return jsonify({"error": "unknown device_id"}), 404
+        logs = repo.list_case_logs(case_id)
+        result = triage_failure_case(device, logs, case=case)
+        repo.update_case_status(case_id, "triaged", actor="system")
+        return jsonify({"triage": result})
+
+    @app.get("/cases/<case_id>/audit-events")
+    @require_auth
+    def get_case_audit_events(case_id: str) -> Any:
+        if not repo.get_case(case_id):
+            return jsonify({"error": "unknown case_id"}), 404
+        return jsonify({"audit_events": repo.list_audit_events(case_id)})
+
     @app.post("/diagnostic-logs")
     @require_auth
     def create_log() -> Any:
@@ -77,18 +139,24 @@ def create_app(
     @require_auth
     def create_report() -> Any:
         payload = request.get_json(force=True)
-        device_id = payload.get("device_id")
+        case_id = payload.get("case_id")
+        case = repo.get_case(case_id) if case_id else None
+        if case_id and not case:
+            return jsonify({"error": "unknown case_id"}), 404
+        device_id = payload.get("device_id") or (case or {}).get("device_id")
         device = repo.get_device(device_id)
         if not device:
             return jsonify({"error": "unknown device_id"}), 404
-        logs = repo.list_logs(device_id)
-        triage = triage_failure_case(device, logs)
+        logs = repo.list_case_logs(case_id) if case_id else repo.list_logs(device_id)
+        triage = triage_failure_case(device, logs, case=case)
         report = {
             "report_id": payload.get("report_id") or f"SYNTH-REPORT-{uuid.uuid4().hex[:8].upper()}",
+            "case_id": case_id,
             "device_id": device_id,
             "privacy_class": "synthetic",
+            "case": case,
             "device": device,
-            "logs": logs,
+            "evidence": logs,
             "triage": triage,
             "review_state": "engineering-hypothesis-not-production-finding",
         }

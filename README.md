@@ -1,42 +1,44 @@
 # Device Inspector Demo
 
-A privacy-preserving hardware diagnostic and failure-analysis demo for engineering teams.
+A privacy-preserving hardware diagnostic and failure-analysis workbench demo for engineering teams.
 
-This repository is a **public-safe demo baseline**. It is designed to show how a hardware diagnostics tool could collect synthetic device telemetry, structure diagnostic logs, run AI-assisted triage, and generate tamper-evident reports without exposing real device identifiers or proprietary data.
+This repository is a **public-safe demo baseline**. It shows how a hardware diagnostics tool can structure synthetic device evidence, manage a case lifecycle, run AI-assisted triage, and generate tamper-evident reports without exposing real device identifiers or proprietary data.
 
 ## Target use case
 
-Internal engineering teams often need a lightweight tool to:
+Internal engineering teams often need a lightweight workbench to:
 
-- track hardware defects and diagnostic evidence;
-- collect structured logs from mobile or desktop clients;
+- track hardware defect cases across lifecycle states;
+- collect structured engineering evidence from synthetic client tools;
 - connect client-side inspection flows with a Python backend;
 - triage likely failure modes with an AI-assisted workflow;
 - generate signed reports that can be verified later;
 - keep sensitive identifiers, logs, and user data out of public artifacts.
 
-This demo maps that workflow into a small Flask application with synthetic data, test coverage, and security-first documentation.
+This demo maps that workflow into a Flask application with SQLite persistence, signed reports, synthetic evidence examples, mobile-client skeletons, and CI checks.
 
 ## What this demo proves
 
 | Capability | Demo evidence |
 |---|---|
-| Hardware diagnostics workflow | Synthetic device records, diagnostic logs, defect cases, report generation |
+| Hardware diagnostics workflow | Case lifecycle, structured evidence schema, FA examples |
 | Python backend | Flask API, SQLite-backed repository layer, pytest coverage |
-| Security model | JWT auth, RSA report signing, report tamper detection tests, no real secrets |
-| AI-assisted triage | Deterministic triage agent stub with evidence, confidence, invalidators, next tests |
-| Failure-analysis process | Structured workflow docs for evidence intake, triage, verification, corrective-action handoff |
-| Engineering quality | GitHub Actions CI, black-box API smoke script, test-first public-safe baseline |
+| Security model | Protected write endpoints, RSA report signing, report tamper detection tests, no real secrets |
+| AI-assisted triage | Deterministic triage agent with evidence, confidence, invalidators, next tests |
+| Failure-analysis process | Evidence intake, triage, verification, audit trail, corrective-action handoff docs |
+| Mobile integration architecture | SwiftUI/Combine/CoreData iOS skeleton and Kotlin MVVM Android skeleton |
+| Evaluation discipline | Synthetic visual triage manifest, baseline classifier, deterministic evaluation script |
+| Engineering quality | GitHub Actions CI, schema checks, mobile skeleton checks, public-safety scan |
 
 ## Non-goals
 
 This repository intentionally does **not** include:
 
-- real IMEI, serial number, UDID, MAC address, or device-owner data;
+- real device identifiers or device-owner data;
 - calls to third-party device-check APIs;
 - proprietary hardware logs or internal company process material;
-- production Apple, Android, OSS, or cloud credentials;
-- a trained CV/VLM model with real defect images.
+- production Apple, Android, object-storage, or cloud credentials;
+- real defect images or production model weights.
 
 The AI module is a safe, deterministic stub that demonstrates system boundaries and data contracts. It can later be replaced by a real CV/VLM pipeline after data-governance approval.
 
@@ -46,7 +48,8 @@ The AI module is a safe, deterministic stub that demonstrates system boundaries 
 Synthetic client / tester
   -> Flask API
   -> SQLite repository
-  -> diagnostic log normalizer
+  -> case lifecycle and audit trail
+  -> diagnostic evidence schema
   -> AI triage agent stub
   -> RSA-signed diagnostic report
   -> verification endpoint / black-box test
@@ -56,7 +59,10 @@ Key documents:
 
 - [`docs/architecture.md`](docs/architecture.md)
 - [`docs/security_model.md`](docs/security_model.md)
+- [`docs/threat_model.md`](docs/threat_model.md)
 - [`docs/failure_analysis_workflow.md`](docs/failure_analysis_workflow.md)
+- [`docs/hardware_evidence_schema.md`](docs/hardware_evidence_schema.md)
+- [`docs/apple_role_alignment.md`](docs/apple_role_alignment.md)
 - [`docs/demo_scope.md`](docs/demo_scope.md)
 
 ## Quick start
@@ -81,10 +87,16 @@ bash ../../scripts/blackbox_api_test.sh
 | Method | Path | Purpose |
 |---|---|---|
 | `GET` | `/health` | Service health |
-| `POST` | `/auth/token` | Demo JWT issuance |
+| `POST` | `/auth/token` | Demo access credential issuance |
 | `POST` | `/devices` | Create synthetic device case |
-| `POST` | `/diagnostic-logs` | Attach structured diagnostic evidence |
-| `POST` | `/triage` | Generate AI-assisted failure triage |
+| `POST` | `/cases` | Create synthetic hardware diagnostic case |
+| `GET` | `/cases/{case_id}` | Fetch case and evidence |
+| `POST` | `/cases/{case_id}/status` | Update lifecycle state |
+| `POST` | `/cases/{case_id}/evidence` | Attach structured hardware evidence |
+| `POST` | `/cases/{case_id}/triage` | Generate AI-assisted case triage |
+| `GET` | `/cases/{case_id}/audit-events` | Review case audit trail |
+| `POST` | `/diagnostic-logs` | Attach legacy synthetic diagnostic evidence |
+| `POST` | `/triage` | Generate device-level triage |
 | `POST` | `/reports` | Generate RSA-signed diagnostic report |
 | `POST` | `/reports/verify` | Verify report signature and tamper status |
 
@@ -92,9 +104,12 @@ bash ../../scripts/blackbox_api_test.sh
 
 ```text
 backend/flask_api/      Flask backend, auth, signing, storage, triage, tests
-ai/                     AI triage contract and CV/VLM stub
-docs/                   Architecture, security model, failure-analysis workflow
-scripts/                Local run and black-box verification helpers
+clients/                iOS SwiftUI and Android Kotlin diagnostic client skeletons
+examples/fa_cases/      Synthetic failure-analysis case examples
+ml/                     Synthetic visual triage evaluation lab
+openapi/                API contract
+docs/                   Architecture, security, FA workflow, role alignment
+scripts/                Local run, schema, mobile, and public-safety checks
 .github/workflows/      CI for backend tests and public-safety checks
 ```
 
@@ -109,6 +124,7 @@ This project is intended to demonstrate a practical intersection of:
 - consumer-electronics hardware context;
 - diagnostic-data engineering;
 - Python backend development;
+- mobile-client architecture;
 - AI-assisted root-cause analysis;
 - secure report verification;
 - cross-functional engineering communication.

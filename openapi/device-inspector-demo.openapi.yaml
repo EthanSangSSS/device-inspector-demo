@@ -1,0 +1,168 @@
+openapi: 3.1.0
+info:
+  title: Device Inspector Demo API
+  version: 0.2.0
+  summary: Public-safe hardware diagnostic workbench demo API.
+  description: Synthetic-data-only API contract for hardware diagnostic evidence intake, AI-assisted triage, audit trail, and tamper-evident reports.
+servers:
+  - url: http://127.0.0.1:5001
+paths:
+  /health:
+    get:
+      summary: Service health
+      responses:
+        '200':
+          description: Service is healthy
+  /auth/token:
+    post:
+      summary: Issue demo access credential
+      responses:
+        '200':
+          description: Demo access credential issued
+  /devices:
+    post:
+      summary: Create synthetic device record
+      responses:
+        '201':
+          description: Synthetic device created
+        '400':
+          description: Invalid synthetic identifier or payload
+  /cases:
+    post:
+      summary: Create synthetic hardware diagnostic case
+      responses:
+        '201':
+          description: Case created
+        '400':
+          description: Invalid case payload
+  /cases/{case_id}:
+    get:
+      summary: Fetch case with evidence
+      parameters:
+        - name: case_id
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^SYNTH-'
+      responses:
+        '200':
+          description: Case and evidence
+        '404':
+          description: Unknown case
+  /cases/{case_id}/status:
+    post:
+      summary: Update case lifecycle status
+      parameters:
+        - name: case_id
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^SYNTH-'
+      responses:
+        '200':
+          description: Status updated
+        '400':
+          description: Invalid status
+  /cases/{case_id}/evidence:
+    post:
+      summary: Attach structured hardware diagnostic evidence
+      parameters:
+        - name: case_id
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^SYNTH-'
+      responses:
+        '201':
+          description: Evidence attached
+        '400':
+          description: Invalid evidence payload
+  /cases/{case_id}/triage:
+    post:
+      summary: Generate AI-assisted engineering hypothesis
+      parameters:
+        - name: case_id
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^SYNTH-'
+      responses:
+        '200':
+          description: Triage hypothesis generated
+        '404':
+          description: Unknown case
+  /cases/{case_id}/audit-events:
+    get:
+      summary: Fetch case audit trail
+      parameters:
+        - name: case_id
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^SYNTH-'
+      responses:
+        '200':
+          description: Audit events
+  /reports:
+    post:
+      summary: Generate signed diagnostic report
+      responses:
+        '201':
+          description: Signed report generated
+  /reports/verify:
+    post:
+      summary: Verify report signature
+      responses:
+        '200':
+          description: Verification result
+components:
+  schemas:
+    CaseStatus:
+      type: string
+      enum: [new, evidence_collected, triaged, needs_reproduction, assigned_to_domain_owner, corrective_action_proposed, verification_pending, closed]
+    BuildPhase:
+      type: string
+      enum: [EVT, DVT, PVT, MP, UNKNOWN]
+    DiagnosticEvidence:
+      type: object
+      required: [log_id, device_id, source, severity, component, test_name, message, evidence_strength]
+      properties:
+        log_id:
+          type: string
+          pattern: '^SYNTH-'
+        case_id:
+          type: string
+          pattern: '^SYNTH-'
+        device_id:
+          type: string
+          pattern: '^SYNTH-'
+        source:
+          type: string
+        severity:
+          type: string
+          enum: [info, warning, critical]
+        component:
+          type: string
+        test_name:
+          type: string
+        measurement:
+          type: object
+          properties:
+            metric:
+              type: string
+            value:
+              type: number
+            unit:
+              type: string
+            limit:
+              type: number
+        reproduction_rate:
+          type: string
+        evidence_strength:
+          type: string
+          enum: [low, medium, high]

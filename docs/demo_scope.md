@@ -3,10 +3,15 @@
 ## What is included
 
 - Flask backend for diagnostic workflow demonstration.
-- SQLite persistence for synthetic devices, logs, and reports.
-- JWT-protected write endpoints.
+- SQLite persistence for synthetic devices, cases, evidence logs, reports, and audit events.
+- Protected write endpoints.
+- Case lifecycle state transitions.
+- Structured hardware evidence schema.
 - RSA report signing and verification.
 - Deterministic AI-assisted triage stub.
+- Synthetic visual triage evaluation path.
+- iOS SwiftUI / Combine / CoreData source skeleton.
+- Android Kotlin / MVVM source skeleton.
 - Pytest coverage and GitHub Actions CI.
 - Public-safety guardrails against realistic identifiers.
 
@@ -30,13 +35,14 @@ The goal is not to claim production-scale hardware failure analysis. The goal is
 - report integrity;
 - testability;
 - AI workflow boundaries;
+- mobile architecture awareness;
 - cross-functional handoff format.
 
 ## Extension roadmap
 
-1. Add a small Flutter or SwiftUI client that submits synthetic logs.
-2. Add image upload using generated synthetic defect images.
-3. Replace deterministic triage with a local model interface.
+1. Wrap the iOS skeleton in a compilable Xcode project.
+2. Wrap the Android skeleton in a Gradle project.
+3. Add generated synthetic visual patterns and a confusion-matrix artifact.
 4. Add calibration metrics for confidence labels.
-5. Add audit events and role-based access control.
+5. Add role-based access control and audit review UI.
 6. Add object-storage abstraction with local filesystem adapter.

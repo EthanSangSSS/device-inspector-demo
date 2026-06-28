@@ -1,0 +1,39 @@
+{
+  "case": {
+    "case_id": "SYNTH-CASE-THERMAL-001",
+    "device_id": "SYNTH-DEVICE-THERMAL-001",
+    "build_phase": "DVT",
+    "component": "thermal_system",
+    "symptom": "Thermal drift during synthetic camera stress loop",
+    "facts": [
+      "Synthetic thermal delta exceeded demo limit in repeated stress loop.",
+      "Observation is limited to public-safe mock telemetry."
+    ],
+    "hypotheses": [
+      "Heat-spreader contact variance.",
+      "Synthetic enclosure-pressure interaction."
+    ]
+  },
+  "evidence": [
+    {
+      "log_id": "SYNTH-LOG-THERMAL-001",
+      "case_id": "SYNTH-CASE-THERMAL-001",
+      "device_id": "SYNTH-DEVICE-THERMAL-001",
+      "source": "thermal_sensor_mock",
+      "severity": "warning",
+      "component": "thermal_system",
+      "test_name": "camera_stress_loop",
+      "fixture_id": "SYNTH-FIXTURE-THERMAL-001",
+      "station": "SYNTH-STATION-DVT-THERMAL",
+      "message": "Thermal envelope exceeded expected synthetic range.",
+      "measurement": {
+        "metric": "surface_temp_delta_c",
+        "value": 8.4,
+        "unit": "C",
+        "limit": 5.0
+      },
+      "reproduction_rate": "4/10",
+      "evidence_strength": "medium"
+    }
+  ]
+}
