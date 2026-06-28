@@ -1,0 +1,35 @@
+{
+  "summary": {
+    "sample_count": 3,
+    "accuracy": 1.0,
+    "data_boundary": "synthetic metadata only",
+    "decision_boundary": "engineering hint; not root cause"
+  },
+  "labels": [
+    "thermal-discoloration-candidate",
+    "surface-scratch-candidate",
+    "unknown-visual-anomaly"
+  ],
+  "confusion_matrix": {
+    "thermal-discoloration-candidate": {
+      "thermal-discoloration-candidate": 1,
+      "surface-scratch-candidate": 0,
+      "unknown-visual-anomaly": 0
+    },
+    "surface-scratch-candidate": {
+      "thermal-discoloration-candidate": 0,
+      "surface-scratch-candidate": 1,
+      "unknown-visual-anomaly": 0
+    },
+    "unknown-visual-anomaly": {
+      "thermal-discoloration-candidate": 0,
+      "surface-scratch-candidate": 0,
+      "unknown-visual-anomaly": 1
+    }
+  },
+  "per_label_metrics": [
+    {"label": "thermal-discoloration-candidate", "precision": 1.0, "recall": 1.0, "f1": 1.0, "support": 1},
+    {"label": "surface-scratch-candidate", "precision": 1.0, "recall": 1.0, "f1": 1.0, "support": 1},
+    {"label": "unknown-visual-anomaly", "precision": 1.0, "recall": 1.0, "f1": 1.0, "support": 1}
+  ]
+}
