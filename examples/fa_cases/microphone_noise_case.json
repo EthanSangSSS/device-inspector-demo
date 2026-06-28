@@ -1,0 +1,38 @@
+{
+  "case": {
+    "case_id": "SYNTH-CASE-MIC-001",
+    "device_id": "SYNTH-DEVICE-MIC-001",
+    "build_phase": "PVT",
+    "component": "microphone",
+    "symptom": "Intermittent microphone noise after synthetic enclosure pressure event",
+    "facts": [
+      "Synthetic audio artifact appears only after mock pressure condition."
+    ],
+    "hypotheses": [
+      "Microphone mesh seating variation.",
+      "Synthetic acoustic path sealing issue."
+    ]
+  },
+  "evidence": [
+    {
+      "log_id": "SYNTH-LOG-MIC-001",
+      "case_id": "SYNTH-CASE-MIC-001",
+      "device_id": "SYNTH-DEVICE-MIC-001",
+      "source": "audio_path_mock",
+      "severity": "info",
+      "component": "microphone",
+      "test_name": "sealed_unsealed_acoustic_loop",
+      "fixture_id": "SYNTH-FIXTURE-AUDIO-001",
+      "station": "SYNTH-STATION-PVT-AUDIO",
+      "message": "Intermittent microphone noise observed after enclosure pressure event.",
+      "measurement": {
+        "metric": "noise_floor_delta_db",
+        "value": 6.2,
+        "unit": "dB",
+        "limit": 3.0
+      },
+      "reproduction_rate": "2/10",
+      "evidence_strength": "low"
+    }
+  ]
+}
