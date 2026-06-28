@@ -1,0 +1,70 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 56;
+	objects = {
+		000000000000000000000001 = {
+			isa = PBXProject;
+			attributes = { LastUpgradeCheck = 1600; };
+			buildConfigurationList = 000000000000000000000010;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (en, Base);
+			mainGroup = 000000000000000000000002;
+			productRefGroup = 000000000000000000000003;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (000000000000000000000004);
+		};
+		000000000000000000000002 = {
+			isa = PBXGroup;
+			children = (000000000000000000000005, 000000000000000000000003);
+			sourceTree = "<group>";
+		};
+		000000000000000000000003 = {
+			isa = PBXGroup;
+			children = (000000000000000000000006);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		000000000000000000000004 = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 000000000000000000000011;
+			buildPhases = (000000000000000000000007);
+			buildRules = ();
+			dependencies = ();
+			name = DeviceInspectorShell;
+			productName = DeviceInspectorShell;
+			productReference = 000000000000000000000006;
+			productType = "com.apple.product-type.application";
+		};
+		000000000000000000000005 = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			path = DeviceInspectorShell;
+			sourceTree = "<group>";
+		};
+		000000000000000000000006 = {
+			isa = PBXFileReference;
+			explicitFileType = wrapper.application;
+			includeInIndex = 0;
+			path = DeviceInspectorShell.app;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		000000000000000000000007 = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		000000000000000000000008 = { isa = XCBuildConfiguration; buildSettings = { IPHONEOS_DEPLOYMENT_TARGET = 17.0; SDKROOT = iphoneos; SWIFT_VERSION = 5.0; }; name = Debug; };
+		000000000000000000000009 = { isa = XCBuildConfiguration; buildSettings = { IPHONEOS_DEPLOYMENT_TARGET = 17.0; SDKROOT = iphoneos; SWIFT_VERSION = 5.0; }; name = Release; };
+		000000000000000000000012 = { isa = XCBuildConfiguration; buildSettings = { GENERATE_INFOPLIST_FILE = YES; PRODUCT_BUNDLE_IDENTIFIER = com.ethansang.deviceinspector.shell; PRODUCT_NAME = DeviceInspectorShell; TARGETED_DEVICE_FAMILY = "1,2"; }; name = Debug; };
+		000000000000000000000013 = { isa = XCBuildConfiguration; buildSettings = { GENERATE_INFOPLIST_FILE = YES; PRODUCT_BUNDLE_IDENTIFIER = com.ethansang.deviceinspector.shell; PRODUCT_NAME = DeviceInspectorShell; TARGETED_DEVICE_FAMILY = "1,2"; }; name = Release; };
+		000000000000000000000010 = { isa = XCConfigurationList; buildConfigurations = (000000000000000000000008, 000000000000000000000009); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		000000000000000000000011 = { isa = XCConfigurationList; buildConfigurations = (000000000000000000000012, 000000000000000000000013); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+	};
+	rootObject = 000000000000000000000001;
+}
