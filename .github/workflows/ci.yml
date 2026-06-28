@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, demo/public-safe-baseline]
+    branches: [main, demo/public-safe-baseline, feat/apple-grade-professionalization]
   pull_request:
     branches: [main]
 
@@ -27,6 +27,17 @@ jobs:
       - name: Run pytest
         working-directory: backend/flask_api
         run: python3 -m pytest -q
+
+      - name: Schema contract check
+        run: python3 scripts/schema_contract_check.py
+
+      - name: Mobile skeleton check
+        run: python3 scripts/mobile_skeleton_check.py
+
+      - name: Synthetic visual evaluation
+        run: |
+          python3 ml/augmentation/generate_synthetic_placeholders.py
+          python3 ml/evaluation/evaluate_triage.py
 
       - name: Public safety scan
         run: python3 scripts/public_safety_scan.py
