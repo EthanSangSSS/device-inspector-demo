@@ -1,0 +1,17 @@
+[
+  {
+    "image_id": "SYNTH-IMAGE-THERMAL-001",
+    "synthetic_hint": "thermal discoloration placeholder",
+    "expected_label": "thermal-discoloration-candidate"
+  },
+  {
+    "image_id": "SYNTH-IMAGE-SCRATCH-001",
+    "synthetic_hint": "surface scratch placeholder",
+    "expected_label": "surface-scratch-candidate"
+  },
+  {
+    "image_id": "SYNTH-IMAGE-UNKNOWN-001",
+    "synthetic_hint": "unknown placeholder",
+    "expected_label": "unknown-visual-anomaly"
+  }
+]
