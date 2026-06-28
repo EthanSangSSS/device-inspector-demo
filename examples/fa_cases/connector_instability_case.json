@@ -1,0 +1,38 @@
+{
+  "case": {
+    "case_id": "SYNTH-CASE-CONNECTOR-001",
+    "device_id": "SYNTH-DEVICE-CONNECTOR-001",
+    "build_phase": "EVT",
+    "component": "connector",
+    "symptom": "Intermittent connector continuity loss under synthetic vibration loop",
+    "facts": [
+      "Synthetic continuity drop observed in 3 of 10 mock fixture runs."
+    ],
+    "hypotheses": [
+      "Connector seating variation.",
+      "Fixture tolerance stack-up."
+    ]
+  },
+  "evidence": [
+    {
+      "log_id": "SYNTH-LOG-CONNECTOR-001",
+      "case_id": "SYNTH-CASE-CONNECTOR-001",
+      "device_id": "SYNTH-DEVICE-CONNECTOR-001",
+      "source": "fixture_continuity_mock",
+      "severity": "warning",
+      "component": "connector",
+      "test_name": "vibration_continuity_loop",
+      "fixture_id": "SYNTH-FIXTURE-CONN-001",
+      "station": "SYNTH-STATION-EVT-01",
+      "message": "Connector continuity loss observed during synthetic vibration loop.",
+      "measurement": {
+        "metric": "continuity_drop_count",
+        "value": 3,
+        "unit": "count",
+        "limit": 0
+      },
+      "reproduction_rate": "3/10",
+      "evidence_strength": "medium"
+    }
+  ]
+}
