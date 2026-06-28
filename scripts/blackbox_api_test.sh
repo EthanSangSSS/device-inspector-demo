@@ -19,18 +19,25 @@ curl -fsS -X POST "$BASE_URL/devices" \
   -d '{"device_id":"SYNTH-DEVICE-BLACKBOX","product_family":"mobile-device","privacy_class":"synthetic"}' \
   | python3 -m json.tool
 
-echo "[log]"
-curl -fsS -X POST "$BASE_URL/diagnostic-logs" \
+echo "[case]"
+curl -fsS -X POST "$BASE_URL/cases" \
   -H "Authorization: Bearer $BEARER" \
   -H 'Content-Type: application/json' \
-  -d '{"log_id":"SYNTH-LOG-BLACKBOX","device_id":"SYNTH-DEVICE-BLACKBOX","source":"thermal_sensor_mock","severity":"warning","message":"Thermal instability after repeated stress loop.","evidence_strength":"medium"}' \
+  -d '{"case_id":"SYNTH-CASE-BLACKBOX","device_id":"SYNTH-DEVICE-BLACKBOX","build_phase":"DVT","component":"thermal_system","symptom":"Synthetic thermal drift"}' \
   | python3 -m json.tool
 
-echo "[triage]"
-curl -fsS -X POST "$BASE_URL/triage" \
+echo "[evidence]"
+curl -fsS -X POST "$BASE_URL/cases/SYNTH-CASE-BLACKBOX/evidence" \
   -H "Authorization: Bearer $BEARER" \
   -H 'Content-Type: application/json' \
-  -d '{"device_id":"SYNTH-DEVICE-BLACKBOX"}' \
+  -d '{"log_id":"SYNTH-LOG-BLACKBOX","device_id":"SYNTH-DEVICE-BLACKBOX","source":"thermal_sensor_mock","severity":"warning","component":"thermal_system","test_name":"camera_stress_loop","message":"Thermal instability after repeated stress loop.","measurement":{"metric":"surface_temp_delta_c","value":8.4,"unit":"C","limit":5.0},"evidence_strength":"medium"}' \
+  | python3 -m json.tool
+
+echo "[case triage]"
+curl -fsS -X POST "$BASE_URL/cases/SYNTH-CASE-BLACKBOX/triage" \
+  -H "Authorization: Bearer $BEARER" \
+  -H 'Content-Type: application/json' \
+  -d '{}' \
   | python3 -m json.tool
 
 echo "black-box API smoke test passed"
