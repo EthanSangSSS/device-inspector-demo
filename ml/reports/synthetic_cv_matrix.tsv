@@ -1,0 +1,4 @@
+expected	thermal-discoloration-candidate	surface-scratch-candidate	unknown-visual-anomaly
+thermal-discoloration-candidate	1	0	0
+surface-scratch-candidate	0	1	0
+unknown-visual-anomaly	0	0	1
