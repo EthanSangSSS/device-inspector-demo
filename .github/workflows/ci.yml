@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, demo/public-safe-baseline, feat/apple-grade-professionalization, feat/origin-bridge]
+    branches: [main, demo/public-safe-baseline, feat/apple-grade-professionalization, feat/origin-bridge, feat/synthetic-cv-eval-report]
   pull_request:
     branches: [main]
 
@@ -41,6 +41,9 @@ jobs:
         run: |
           python3 ml/augmentation/generate_synthetic_placeholders.py
           python3 ml/evaluation/evaluate_triage.py
+
+      - name: Synthetic CV report check
+        run: python3 scripts/synthetic_cv_report_check.py
 
       - name: Public safety scan
         run: python3 scripts/public_safety_scan.py
