@@ -2,7 +2,7 @@
 
 A privacy-preserving hardware diagnostic and failure-analysis workbench demo for engineering teams.
 
-This repository is a **public-safe demo baseline**. It shows how a hardware diagnostics tool can structure synthetic device evidence, manage a case lifecycle, run AI-assisted triage, and generate tamper-evident reports without exposing real device identifiers or proprietary data.
+This repository is a **public-safe demo baseline** derived from the same product idea as the private Device Inspector project: trustworthy device inspection, evidence collection, and verifiable reports. It shows how a hardware diagnostics tool can structure synthetic device evidence, manage a case lifecycle, run AI-assisted triage, and generate tamper-evident reports without exposing real device identifiers or proprietary data.
 
 ## Target use case
 
@@ -21,6 +21,7 @@ This demo maps that workflow into a Flask application with SQLite persistence, s
 
 | Capability | Demo evidence |
 |---|---|
+| Product-origin traceability | [`docs/origin_bridge.md`](docs/origin_bridge.md) maps the original device-inspection idea to this public-safe engineering demo |
 | Hardware diagnostics workflow | Case lifecycle, structured evidence schema, FA examples |
 | Python backend | Flask API, SQLite-backed repository layer, pytest coverage |
 | Security model | Protected write endpoints, RSA report signing, report tamper detection tests, no real secrets |
@@ -45,7 +46,9 @@ The AI module is a safe, deterministic stub that demonstrates system boundaries 
 ## Architecture
 
 ```text
-Synthetic client / tester
+Private device-inspection product idea
+  -> public-safe engineering abstraction
+  -> synthetic client / tester
   -> Flask API
   -> SQLite repository
   -> case lifecycle and audit trail
@@ -57,6 +60,8 @@ Synthetic client / tester
 
 Key documents:
 
+- [`docs/origin_bridge.md`](docs/origin_bridge.md)
+- [`docs/demo_from_product_principles.md`](docs/demo_from_product_principles.md)
 - [`docs/architecture.md`](docs/architecture.md)
 - [`docs/security_model.md`](docs/security_model.md)
 - [`docs/threat_model.md`](docs/threat_model.md)
@@ -108,7 +113,7 @@ clients/                iOS SwiftUI and Android Kotlin diagnostic client skeleto
 examples/fa_cases/      Synthetic failure-analysis case examples
 ml/                     Synthetic visual triage evaluation lab
 openapi/                API contract
-docs/                   Architecture, security, FA workflow, role alignment
+docs/                   Origin bridge, architecture, security, FA workflow, role alignment
 scripts/                Local run, schema, mobile, and public-safety checks
 .github/workflows/      CI for backend tests and public-safety checks
 ```
