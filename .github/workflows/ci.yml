@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main, demo/public-safe-baseline]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    env:
+      PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          show-progress: false
+
+      - name: Install dependencies
+        working-directory: backend/flask_api
+        run: |
+          python3 --version
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r requirements.txt
+
+      - name: Run pytest
+        working-directory: backend/flask_api
+        run: python3 -m pytest -q
+
+      - name: Public safety scan
+        run: python3 scripts/public_safety_scan.py

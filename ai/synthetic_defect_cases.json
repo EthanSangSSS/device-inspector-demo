@@ -1,0 +1,18 @@
+[
+  {
+    "case_id": "SYNTH-CASE-001",
+    "device_id": "SYNTH-DEVICE-001",
+    "symptom": "Thermal warning during repeated camera stress loop",
+    "candidate_failure_mode": "thermal-envelope-instability",
+    "evidence_strength": "medium",
+    "human_review_required": true
+  },
+  {
+    "case_id": "SYNTH-CASE-002",
+    "device_id": "SYNTH-DEVICE-002",
+    "symptom": "Intermittent microphone noise after enclosure pressure event",
+    "candidate_failure_mode": "intermittent-audio-path-noise",
+    "evidence_strength": "low",
+    "human_review_required": true
+  }
+]
