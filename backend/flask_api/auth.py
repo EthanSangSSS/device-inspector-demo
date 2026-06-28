@@ -8,7 +8,7 @@ from functools import wraps
 from typing import Any, Callable, TypeVar, cast
 
 import jwt
-from flask import jsonify, request
+from flask import g, jsonify, request
 
 F = TypeVar("F", bound=Callable[..., Any])
 
@@ -47,7 +47,7 @@ def require_auth(func: F) -> F:
             return jsonify({"error": "missing bearer token"}), 401
         token = header.removeprefix("Bearer ").strip()
         try:
-            request.claims = decode_token(token)  # type: ignore[attr-defined]
+            g.claims = decode_token(token)
         except jwt.PyJWTError:
             return jsonify({"error": "invalid bearer token"}), 401
         return func(*args, **kwargs)
