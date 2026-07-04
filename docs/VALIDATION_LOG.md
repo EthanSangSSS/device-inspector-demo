@@ -29,17 +29,25 @@ This ledger records what has actually been verified, what remains synthetic, and
 
 Run from repository root unless a script says otherwise.
 
+Terminal A - backend tests and local API server:
+
 ```bash
 python3 -m compileall backend || true
 cd backend/flask_api
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-pytest -q
-cd ../..
+PYTHONPATH=. pytest -q
+python app.py
+```
+
+Terminal B - black-box and repository checks:
+
+```bash
 bash scripts/blackbox_api_test.sh
-bash scripts/public_safety_scan.sh || true
-bash scripts/check_mobile_skeletons.sh || true
+python3 scripts/public_safety_scan.py
+python3 scripts/mobile_skeleton_check.py
+git diff --check origin/main...HEAD
 ```
 
 If a script name has changed or does not exist, the local agent must report the exact missing path and list the available scripts rather than inventing a replacement result.
