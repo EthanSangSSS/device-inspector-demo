@@ -24,6 +24,9 @@
 - Cloud object storage credentials or OSS buckets.
 - Real CV/VLM model weights or private image datasets.
 - Mobile app binaries or store submission assets.
+- App Store or Play Store purchase verification.
+- Private mobile platform probes or review-sensitive system-property reads.
+- Real serial-number prefix databases or production model-identification data.
 
 ## Why this matters for interviews
 
@@ -46,3 +49,5 @@ The goal is not to claim production-scale hardware failure analysis. The goal is
 4. Add calibration metrics for confidence labels.
 5. Add role-based access control and audit review UI.
 6. Add object-storage abstraction with local filesystem adapter.
+7. Add a public model-identifier field to evidence examples with confidence and provenance.
+8. Add a demo entitlement boundary that fails closed without real store integration.

@@ -14,6 +14,8 @@ The private Device Inspector project remains the product workspace. This public 
 - Architecture patterns.
 - Public-safe synthetic schemas.
 - Verification and trust concepts.
+- Compliance-safe fallback patterns.
+- Public model-identifier concepts.
 - Interview-safe narrative.
 
 ## Disallowed transfer
@@ -22,6 +24,8 @@ The private Device Inspector project remains the product workspace. This public 
 - Real inspection flows.
 - Real device records.
 - Production integrations.
+- Store receipt verification logic.
+- Private platform probes.
 - Local file paths.
 - Private screenshots.
 - Private build artifacts.

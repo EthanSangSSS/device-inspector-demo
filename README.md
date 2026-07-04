@@ -17,6 +17,11 @@ Internal engineering teams often need a lightweight workbench to:
 
 This demo maps that workflow into a Flask application with SQLite persistence, signed reports, synthetic evidence examples, mobile-client skeletons, and CI checks.
 
+Recent product-facing ideas carried into the public demo are intentionally kept
+at the abstraction level: signed evidence as the trust layer, fail-closed
+entitlement boundaries, platform-safe evidence collection, and public
+model-identifier fields with provenance instead of real serial records.
+
 ## What this demo proves
 
 | Capability | Demo evidence |
