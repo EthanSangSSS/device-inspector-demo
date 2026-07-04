@@ -28,6 +28,10 @@ model-identifier fields with provenance instead of real serial records.
 |---|---|
 | Product-origin traceability | [`docs/origin_bridge.md`](docs/origin_bridge.md) maps the original device-inspection idea to this public-safe engineering demo |
 | Hardware diagnostics workflow | Case lifecycle, structured evidence schema, FA examples |
+| Inspection capability discipline | [`docs/DEVICE_INSPECTION_MATRIX.md`](docs/DEVICE_INSPECTION_MATRIX.md) defines data source, automation level, confidence, invalidators, and report output for each diagnostic domain |
+| Validation discipline | [`docs/VALIDATION_LOG.md`](docs/VALIDATION_LOG.md) separates verified, partially verified, synthetic-only, blocked, and not-yet-verified claims |
+| Known limitations | [`docs/KNOWN_LIMITATIONS.md`](docs/KNOWN_LIMITATIONS.md) prevents overclaiming on battery health, repair history, water damage, display quality, sensors, and AI triage |
+| Report contract | [`docs/REPORT_SCHEMA.md`](docs/REPORT_SCHEMA.md) defines the minimum evidence/finding/disposition/signature schema for trustworthy reports |
 | Python backend | Flask API, SQLite-backed repository layer, pytest coverage |
 | Security model | Protected write endpoints, RSA report signing, report tamper detection tests, no real secrets |
 | AI-assisted triage | Deterministic triage agent with evidence, confidence, invalidators, next tests |
@@ -35,6 +39,18 @@ model-identifier fields with provenance instead of real serial records.
 | Mobile integration architecture | SwiftUI/Combine/CoreData iOS skeleton and Kotlin MVVM Android skeleton |
 | Evaluation discipline | Synthetic visual triage manifest, baseline classifier, deterministic evaluation script |
 | Engineering quality | GitHub Actions CI, schema checks, mobile skeleton checks, public-safety scan |
+
+## Inspection-system boundary
+
+A device-inspection product must not claim more than its evidence can support. This demo therefore classifies each diagnostic signal by:
+
+- data source: public API, guided user check, manual checklist, synthetic fixture, external fixture, or derived signal;
+- automation level: automatic, guided, manual, or external fixture;
+- evidence strength: high, medium, low, or not supported;
+- invalidators: conditions that could make a finding wrong;
+- next test: the smallest retest that would increase confidence.
+
+The public demo can demonstrate the workflow, schema, synthetic examples, and signed reports. It must not include real serials, real defect photos, owner data, production logs, private model weights, vendor diagnostics, or proprietary hardware procedures.
 
 ## Non-goals
 
@@ -58,6 +74,8 @@ Private device-inspection product idea
   -> SQLite repository
   -> case lifecycle and audit trail
   -> diagnostic evidence schema
+  -> inspection capability matrix
+  -> validation evidence ledger
   -> AI triage agent stub
   -> RSA-signed diagnostic report
   -> verification endpoint / black-box test
@@ -72,6 +90,10 @@ Key documents:
 - [`docs/threat_model.md`](docs/threat_model.md)
 - [`docs/failure_analysis_workflow.md`](docs/failure_analysis_workflow.md)
 - [`docs/hardware_evidence_schema.md`](docs/hardware_evidence_schema.md)
+- [`docs/DEVICE_INSPECTION_MATRIX.md`](docs/DEVICE_INSPECTION_MATRIX.md)
+- [`docs/VALIDATION_LOG.md`](docs/VALIDATION_LOG.md)
+- [`docs/KNOWN_LIMITATIONS.md`](docs/KNOWN_LIMITATIONS.md)
+- [`docs/REPORT_SCHEMA.md`](docs/REPORT_SCHEMA.md)
 - [`docs/apple_role_alignment.md`](docs/apple_role_alignment.md)
 - [`docs/demo_scope.md`](docs/demo_scope.md)
 
@@ -118,7 +140,7 @@ clients/                iOS SwiftUI and Android Kotlin diagnostic client skeleto
 examples/fa_cases/      Synthetic failure-analysis case examples
 ml/                     Synthetic visual triage evaluation lab
 openapi/                API contract
-docs/                   Origin bridge, architecture, security, FA workflow, role alignment
+docs/                   Origin bridge, architecture, security, FA workflow, inspection matrix, validation ledger, role alignment
 scripts/                Local run, schema, mobile, and public-safety checks
 .github/workflows/      CI for backend tests and public-safety checks
 ```
