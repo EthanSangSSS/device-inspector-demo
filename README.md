@@ -1,8 +1,23 @@
 # Device Inspector Demo
 
+[![Portfolio](https://img.shields.io/badge/portfolio-public--safe%20demo-blue)](docs/PORTFOLIO_OVERVIEW.md)
+[![Stack](https://img.shields.io/badge/stack-Flask%20%7C%20SQLite%20%7C%20SwiftUI%20%7C%20Kotlin-informational)](docs/PORTFOLIO_OVERVIEW.md)
+[![Data](https://img.shields.io/badge/data-synthetic--only-success)](docs/PORTFOLIO_OVERVIEW.md)
+[![Actions](https://img.shields.io/badge/CI-GitHub%20Actions-informational)](https://github.com/EthanSangSSS/device-inspector-demo/actions)
+
 A privacy-preserving hardware diagnostic and failure-analysis workbench demo for engineering teams.
 
 This repository is a **public-safe demo baseline** derived from the same product idea as the private Device Inspector project: trustworthy device inspection, evidence collection, and verifiable reports. It shows how a hardware diagnostics tool can structure synthetic device evidence, manage a case lifecycle, run AI-assisted triage, and generate tamper-evident reports without exposing real device identifiers or proprietary data.
+
+## Portfolio fast path
+
+Start here if you are reviewing this as a portfolio project:
+
+- [`docs/PORTFOLIO_OVERVIEW.md`](docs/PORTFOLIO_OVERVIEW.md) — one-page reviewer guide, Mermaid architecture map, demo surfaces, and screenshot policy.
+- [`docs/DEVICE_INSPECTION_MATRIX.md`](docs/DEVICE_INSPECTION_MATRIX.md) — diagnostic capability boundaries by data source, automation level, confidence, invalidators, and report output.
+- [`docs/VALIDATION_LOG.md`](docs/VALIDATION_LOG.md) — verified vs partial vs synthetic-only vs blocked claims.
+- [`docs/KNOWN_LIMITATIONS.md`](docs/KNOWN_LIMITATIONS.md) — explicit anti-overclaiming boundary.
+- [`docs/apple_role_alignment.md`](docs/apple_role_alignment.md) — role-fit summary for consumer-electronics diagnostics and engineering workflow work.
 
 ## Target use case
 
@@ -81,8 +96,11 @@ Private device-inspection product idea
   -> verification endpoint / black-box test
 ```
 
+For a visual reviewer-oriented architecture map, see [`docs/PORTFOLIO_OVERVIEW.md`](docs/PORTFOLIO_OVERVIEW.md).
+
 Key documents:
 
+- [`docs/PORTFOLIO_OVERVIEW.md`](docs/PORTFOLIO_OVERVIEW.md)
 - [`docs/origin_bridge.md`](docs/origin_bridge.md)
 - [`docs/demo_from_product_principles.md`](docs/demo_from_product_principles.md)
 - [`docs/architecture.md`](docs/architecture.md)
