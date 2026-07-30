@@ -1,8 +1,8 @@
 import json
-import shutil
 import socket
 import subprocess
 import time
+import uuid
 
 
 def _run(command, timeout=45):
@@ -16,13 +16,13 @@ def _run(command, timeout=45):
         )
         return {
             "returncode": completed.returncode,
-            "stdout": completed.stdout[:12_000],
+            "stdout": completed.stdout[:20_000],
             "stderr": completed.stderr[:4_000],
         }
     except subprocess.TimeoutExpired as exc:
         return {
             "timeout": True,
-            "stdout": (exc.stdout or "")[:12_000] if isinstance(exc.stdout, str) else "",
+            "stdout": (exc.stdout or "")[:20_000] if isinstance(exc.stdout, str) else "",
             "stderr": (exc.stderr or "")[:4_000] if isinstance(exc.stderr, str) else "",
         }
 
@@ -32,7 +32,7 @@ def _parse_body(text):
     try:
         payload = json.loads(body)
     except (json.JSONDecodeError, TypeError):
-        return {"body_prefix": body[:1200]}
+        return {"body_prefix": body[:1500]}
 
     result = {"payload_type": type(payload).__name__}
     if not isinstance(payload, dict):
@@ -69,21 +69,23 @@ def _parse_body(text):
     return result
 
 
+def _probe(base_curl, url):
+    result = _run(base_curl + [url])
+    result["parsed"] = _parse_body(result.get("stdout", ""))
+    return result
+
+
 def test_steamdt_broad_anonymous_probe():
     epoch_ms = int(time.time() * 1000)
     page_url = "https://steamdt.com/section?type=BROAD"
-    api_url = (
-        "https://api.steamdt.com/user/statistics/v2/chart"
-        f"?timestamp={epoch_ms}&type=2&dateType=2"
-    )
     user_agent = (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
         "AppleWebKit/537.36 (KHTML, like Gecko) "
         "Chrome/145.0.0.0 Safari/537.36"
     )
 
-    summary = {"dns": {}, "curl": {}, "browser": {}}
-    for host in ("api.steamdt.com", "steamdt.com"):
+    summary = {"dns": {}, "requests": {}}
+    for host in ("api.steamdt.com", "steamdt.com", "www.steamdt.com"):
         try:
             summary["dns"][host] = sorted(
                 {item[4][0] for item in socket.getaddrinfo(host, 443, type=socket.SOCK_STREAM)}
@@ -110,72 +112,56 @@ def test_steamdt_broad_anonymous_probe():
         "--header",
         "Accept-Language: zh-CN,zh;q=0.9,en;q=0.8",
         "--header",
+        "access-token: undefined",
+        "--header",
+        "language: zh_CN",
+        "--header",
+        "x-app-version: 1.0.0",
+        "--header",
+        "x-currency: CNY",
+        "--header",
+        "x-device: 1",
+        "--header",
+        f"x-device-id: {uuid.uuid4()}",
+        "--header",
         f"Referer: {page_url}",
         "--header",
         "Origin: https://steamdt.com",
         "--write-out",
-        "\n__CURL_META__:status=%{http_code};remote_ip=%{remote_ip};content_type=%{content_type};time=%{time_total}",
+        "\n__CURL_META__:status=%{http_code};remote_ip=%{remote_ip};content_type=%{content_type};redirect=%{redirect_url};time=%{time_total}",
     ]
 
-    direct = _run(base_curl + [api_url])
-    direct["parsed"] = _parse_body(direct.get("stdout", ""))
-    summary["curl"]["api_direct"] = direct
-
-    plain_http_url = api_url.replace("https://", "http://", 1)
-    plain = _run(base_curl + [plain_http_url])
-    plain["parsed"] = _parse_body(plain.get("stdout", ""))
-    summary["curl"]["api_http_redirect"] = plain
-
-    page = _run(
-        [
-            "curl",
-            "--ipv4",
-            "--http1.1",
-            "--connect-timeout",
-            "10",
-            "--max-time",
-            "20",
-            "--silent",
-            "--show-error",
-            "--location",
-            "--user-agent",
-            user_agent,
-            "--write-out",
-            "\n__CURL_META__:status=%{http_code};remote_ip=%{remote_ip};content_type=%{content_type};time=%{time_total}",
-            page_url,
-        ],
-        timeout=30,
-    )
-    page["body_prefix"] = page.get("stdout", "")[:500]
-    page.pop("stdout", None)
-    summary["curl"]["page"] = page
-
-    chrome = next(
-        (
-            path
-            for name in ("google-chrome", "google-chrome-stable", "chromium", "chromium-browser")
-            if (path := shutil.which(name))
+    urls = {
+        "api_v1_empty_max": (
+            "https://api.steamdt.com/user/statistics/v1/kline"
+            f"?timestamp={epoch_ms}&type=2&maxTime="
         ),
-        None,
-    )
-    summary["browser"]["executable"] = chrome
-    if chrome:
-        browser = _run(
-            [
-                chrome,
-                "--headless=new",
-                "--no-sandbox",
-                "--disable-gpu",
-                "--disable-dev-shm-usage",
-                "--dump-dom",
-                api_url,
-            ],
-            timeout=50,
-        )
-        browser["parsed"] = _parse_body(browser.get("stdout", ""))
-        summary["browser"]["api_direct"] = browser
+        "api_v1_zero_max": (
+            "https://api.steamdt.com/user/statistics/v1/kline"
+            f"?timestamp={epoch_ms}&type=2&maxTime=0"
+        ),
+        "api_v1_no_max": (
+            "https://api.steamdt.com/user/statistics/v1/kline"
+            f"?timestamp={epoch_ms}&type=2"
+        ),
+        "www_api_v1_empty_max": (
+            "https://www.steamdt.com/api/user/statistics/v1/kline"
+            f"?timestamp={epoch_ms}&type=2&maxTime="
+        ),
+        "www_api_v2_chart": (
+            "https://www.steamdt.com/api/user/statistics/v2/chart"
+            f"?timestamp={epoch_ms}&type=2&dateType=2&maxTime="
+        ),
+        "bare_api_v1_empty_max": (
+            "https://steamdt.com/api/user/statistics/v1/kline"
+            f"?timestamp={epoch_ms}&type=2&maxTime="
+        ),
+    }
+
+    for name, url in urls.items():
+        summary["requests"][name] = _probe(base_curl, url)
 
     raise AssertionError(
         "STEAMDT_PROBE_RESULT="
-        + json.dumps(summary, ensure_ascii=False, separators=(",", ":"))[:20_000]
+        + json.dumps(summary, ensure_ascii=False, separators=(",", ":"))[:30_000]
     )
