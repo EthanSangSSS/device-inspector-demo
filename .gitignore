@@ -15,6 +15,17 @@ venv/
 .env.*
 !.env.example
 
+# Local secrets and signing material
+**/.mcp.json
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+**/service-account*.json
+**/play-service-account*.json
+
 # OS / editor
 .DS_Store
 .idea/
