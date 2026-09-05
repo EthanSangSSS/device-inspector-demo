@@ -143,7 +143,14 @@ def create_app(
         case = repo.get_case(case_id) if case_id else None
         if case_id and not case:
             return jsonify({"error": "unknown case_id"}), 404
-        device_id = payload.get("device_id") or (case or {}).get("device_id")
+        requested_device_id = payload.get("device_id")
+        if case:
+            case_device_id = case["device_id"]
+            if requested_device_id is not None and requested_device_id != case_device_id:
+                return jsonify({"error": "device_id does not match case device_id"}), 400
+            device_id = case_device_id
+        else:
+            device_id = requested_device_id
         device = repo.get_device(device_id)
         if not device:
             return jsonify({"error": "unknown device_id"}), 404
