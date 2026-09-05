@@ -46,3 +46,52 @@ def test_case_report_signature_includes_case_and_evidence(client, auth_header):
     invalid = client.post("/reports/verify", json={"report": tampered, "signature": payload["signature"]})
     assert invalid.status_code == 200
     assert invalid.get_json()["valid"] is False
+
+
+def test_case_report_rejects_conflicting_explicit_device(client, auth_header):
+    device_a = {
+        "device_id": "SYNTH-DEVICE-REPORT-A",
+        "product_family": "mobile-device",
+        "privacy_class": "synthetic",
+    }
+    device_b = {
+        "device_id": "SYNTH-DEVICE-REPORT-B",
+        "product_family": "mobile-device",
+        "privacy_class": "synthetic",
+    }
+    case = {
+        "case_id": "SYNTH-CASE-REPORT-BINDING",
+        "device_id": device_a["device_id"],
+        "build_phase": "PVT",
+        "component": "thermal_system",
+        "symptom": "Synthetic evidence must stay bound to the case device",
+    }
+
+    assert client.post("/devices", json=device_a, headers=auth_header).status_code == 201
+    assert client.post("/devices", json=device_b, headers=auth_header).status_code == 201
+    assert client.post("/cases", json=case, headers=auth_header).status_code == 201
+
+    created = client.post(
+        "/reports",
+        json={
+            "case_id": case["case_id"],
+            "device_id": device_b["device_id"],
+            "report_id": "SYNTH-REPORT-MISMATCH",
+        },
+        headers=auth_header,
+    )
+
+    assert created.status_code == 400
+    assert created.get_json() == {"error": "device_id does not match case device_id"}
+
+    empty_device = client.post(
+        "/reports",
+        json={
+            "case_id": case["case_id"],
+            "device_id": "",
+            "report_id": "SYNTH-REPORT-EMPTY-DEVICE",
+        },
+        headers=auth_header,
+    )
+    assert empty_device.status_code == 400
+    assert empty_device.get_json() == {"error": "device_id does not match case device_id"}
